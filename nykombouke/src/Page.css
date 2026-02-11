@@ -1,0 +1,19 @@
+h1 {
+  color: #fafafa;
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+  font-weight: bold;
+}
+
+.musikk-container {
+  height: 100vh; /* Full høyde */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Viktig! */
+}
+
+.scroll-stack-scroller {
+  flex: 1; /* Ta resten av plassen */
+  overflow-y: auto !important;
+}

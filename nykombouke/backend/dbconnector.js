@@ -9,17 +9,14 @@ const pool = mariadb.createPool({
 });
 
 export async function get_Album() {
-  let conn;
-
-  try {
-    conn = await pool.getConnection();
-
-    const rows = await conn.query("SELECT * FROM album");
-    console.log(rows); //[ {val: 1}, meta: ... ]
-
-    return rows;
-
-  } catch (err) {
-    throw err;
-  }
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const rows = await conn.query('SELECT * FROM album');
+        return rows;
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) conn.release(); // ✅ Frigjør alltid connections!
+    }
 }
