@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import ScrollStack, { ScrollStackItem } from './ScrollStack';
+import Header from './Header';
 import './ScrollStack.css';
 import './Page.css';
 
@@ -8,29 +9,27 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-useEffect(() => {
-  fetch('/musikk')
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('Noe gikk galt');
-      }
-      return response.json();
-    })
-    .then((data) => {
-      console.log('DATA FRA BACKEND:', data); // <-- LEGG TIL DENNE
-      console.log('Er det en array?', Array.isArray(data)); // <-- OG DENNE
-      setAlbums(data);
-      setLoading(false);
-    })
-    .catch((err) => {
-      console.error('Feil ved henting:', err);
-      setError(err.message);
-      setLoading(false);
-    });
-}, []);
+  useEffect(() => {
+    fetch('/musikk')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Kunne ikke hente musikk');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setAlbums(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Feil ved henting:', err);
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
 
-  if (loading) return <div>Laster...</div>;/* 
-  if (error) return <div>Feil: {error}</div>; */
+  if (loading) return <div className="loading">⏳ Laster...</div>;
+  if (error) return <div className="error">❌ Feil: {error}</div>;
 
   return (
     <div className="musikk-container">
@@ -41,8 +40,7 @@ useEffect(() => {
           Ingen album funnet i databasen
         </p>
       ) : (
-
-        <ScrollStack useWindowScroll={true}>  {/* true i stedet for false */}
+        <ScrollStack useWindowScroll={true}>
           {albums.map((album, index) => (
             <ScrollStackItem key={index}>
               <h2>{album.tittel || album.title || 'Ukjent album'}</h2>
