@@ -121,9 +121,10 @@ const ScrollStack = ({
       const isPinned = scrollTop >= pinStart && scrollTop <= pinEnd;
 
       if (isPinned) {
-        translateY = scrollTop - cardTop + stackPositionPx + itemStackDistance * i;
+        // Gamle kort dytter OPPOVER (negativ translateY)
+        translateY = -(scrollTop - pinStart);
       } else if (scrollTop > pinEnd) {
-        translateY = pinEnd - cardTop + stackPositionPx + itemStackDistance * i;
+        translateY = -(pinEnd - pinStart);
       }
 
       const newTransform = {
@@ -147,6 +148,7 @@ const ScrollStack = ({
 
         card.style.transform = transform;
         card.style.filter = filter;
+        card.style.zIndex = cardsRef.current.length - i; // Nyere kort på toppen
 
         lastTransformsRef.current.set(i, newTransform);
       }

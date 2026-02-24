@@ -4,19 +4,23 @@
   box-sizing: border-box;
 }
 
+html {
+  overflow-x: hidden;  /* Forhindre horisontal scroll */
+}
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #463ac7 0%, #a24b9c 100%);
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 .App {
   text-align: center;
   min-height: 100vh;
-  padding: 100px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
-}
+  overflow-x: hidden;}
 
 .App-logo {
   height: 40vmin;
@@ -53,11 +57,3 @@ body {
   color: #61dafb;
 }
 
-.header {
-  background: white;
-  border-radius: 20px;
-  padding: 40px;
-  max-width: 1400px;
-  margin: 0 auto;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-}

@@ -13,12 +13,8 @@
 }
 
 .scroll-stack-inner {
-  padding: 20vh 5rem 50rem;
-  min-height: 100vh;
-}
-
-.scroll-stack-card-wrapper {
-  position: relative;
+  padding: 25vh 2rem 20vh;  /* 25vh gir sentrering */
+  min-height: auto;
 }
 
 .scroll-stack-card {
@@ -26,17 +22,37 @@
   will-change: transform, filter;
   backface-visibility: hidden;
   transform-style: preserve-3d;
+  background: white;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
-  height: 20rem;
-  width: 100%;
-  margin: 30px 0;
-  padding: 3rem;
+  height: 12rem;
+  width: 70%;
+  max-width: 600px;
+  margin: 0 auto;
+  margin-bottom: 50px;  /* Reduser fra standard til 50px */
+  padding: 2rem;
   border-radius: 40px;
   box-sizing: border-box;
-  /* Improve mobile performance */
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
   position: relative;
+}
+
+.scroll-stack-card-wrapper {
+  position: relative;
+}
+
+
+/* Style innholdet i kortene */
+.scroll-stack-card h2 {
+  color: #2c3e50;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.scroll-stack-card p {
+  color: #555;
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
 }
 
 .scroll-stack-end {

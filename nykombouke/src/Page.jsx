@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import ScrollStack, { ScrollStackItem } from './ScrollStack';
-import Header from './Header';
 import './ScrollStack.css';
 import './Page.css';
 
@@ -33,14 +32,12 @@ export default function Page() {
 
   return (
     <div className="musikk-container">
-      <h1>🎵 Mitt Musikkbibliotek</h1>
-      
       {albums.length === 0 ? (
         <p style={{textAlign: 'center', color: '#7f8c8d'}}>
           Ingen album funnet i databasen
         </p>
       ) : (
-        <ScrollStack useWindowScroll={true}>
+        <ScrollStack useWindowScroll={false}>  {/* ENDRE TIL FALSE! */}
           {albums.map((album, index) => (
             <ScrollStackItem key={index}>
               <h2>{album.tittel || album.title || 'Ukjent album'}</h2>

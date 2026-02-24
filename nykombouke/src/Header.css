@@ -1,0 +1,45 @@
+.header {
+  background:#110954ff;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  position: sticky;  /* Holder den øverst når du scroller */
+  top: 0;
+  z-index: 100;
+  width: 100%;
+}
+
+.header-nav {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 124px 0px 124px;
+}
+
+.header-logo {
+  font-size: 30px;
+  font-weight: bold;
+  color: rgb(197, 197, 197);
+}
+
+.header-buttons {
+  display: flex;
+  gap: 32px;
+}
+
+.header-buttons button {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  /*color: #555;*/
+  color: rgb(197, 197, 197);
+}
+
+.header-buttons button:hover {
+  color: #764ba2;
+  text-decoration: underline;
+}
