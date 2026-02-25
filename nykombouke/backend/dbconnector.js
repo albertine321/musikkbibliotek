@@ -12,11 +12,24 @@ export async function get_Album() {
     let conn;
     try {
         conn = await pool.getConnection();
-        const rows = await conn.query('SELECT * FROM album');
+        // JOIN med artist-tabellen for å få artistnavn
+        const rows = await conn.query(`
+            SELECT 
+                album.album_id,
+                album.tittel,
+                album.utgivelsesaar,
+                album.spotify_url,
+                album.bilde_url,
+                album.spotify_code_bilde,
+                artist.navn AS artist_navn
+            FROM album
+            JOIN artist ON album.artist_id = artist.artist_id
+            ORDER BY album.album_id
+        `);
         return rows;
     } catch (err) {
         throw err;
     } finally {
-        if (conn) conn.release(); // ✅ Frigjør alltid connections!
+        if (conn) conn.release();
     }
 }
