@@ -12,7 +12,6 @@ export async function get_Album() {
     let conn;
     try {
         conn = await pool.getConnection();
-        // JOIN med artist-tabellen for å få artistnavn
         const rows = await conn.query(`
             SELECT 
                 album.album_id,
@@ -27,6 +26,79 @@ export async function get_Album() {
             ORDER BY album.album_id
         `);
         return rows;
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+export async function add_Album({ tittel, artist_navn, utgivelsesaar, bilde_url, spotify_url, spotify_code_bilde }) {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+
+        // Sjekk om artisten finnes, ellers opprett den
+        let artistRows = await conn.query(
+            `SELECT artist_id FROM artist WHERE navn = ?`,
+            [artist_navn]
+        );
+
+        let artist_id;
+        if (artistRows.length > 0) {
+            artist_id = artistRows[0].artist_id;
+        } else {
+            const result = await conn.query(
+                `INSERT INTO artist (navn) VALUES (?)`,
+                [artist_navn]
+            );
+            artist_id = Number(result.insertId);
+        }
+
+        const result = await conn.query(
+            `INSERT INTO album (tittel, artist_id, utgivelsesaar, bilde_url, spotify_url, spotify_code_bilde)
+             VALUES (?, ?, ?, ?, ?, ?)`,
+            [tittel, artist_id, utgivelsesaar || null, bilde_url || null, spotify_url || null, spotify_code_bilde || null]
+        );
+
+        return { success: true, album_id: Number(result.insertId) };
+    } catch (err) {
+        throw err;
+    } finally {
+        if (conn) conn.release();
+    }
+}
+
+export async function delete_Album(album_id) {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+
+        // Finn artist_id før vi sletter albumet
+        const albumRows = await conn.query(
+            `SELECT artist_id FROM album WHERE album_id = ?`,
+            [album_id]
+        );
+
+        if (albumRows.length === 0) {
+            throw new Error(`Album med id ${album_id} finnes ikke`);
+        }
+
+        const artist_id = albumRows[0].artist_id;
+
+        // Slett albumet
+        await conn.query(`DELETE FROM album WHERE album_id = ?`, [album_id]);
+
+        // Rydd opp artist hvis den ikke har flere album
+        const remaining = await conn.query(
+            `SELECT COUNT(*) AS count FROM album WHERE artist_id = ?`,
+            [artist_id]
+        );
+        if (Number(remaining[0].count) === 0) {
+            await conn.query(`DELETE FROM artist WHERE artist_id = ?`, [artist_id]);
+        }
+
+        return { success: true };
     } catch (err) {
         throw err;
     } finally {
