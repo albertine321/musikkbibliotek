@@ -6,7 +6,7 @@ export default function Header() {
       <nav className="header-nav">
         
         <div className="header-logo">
-          🎵 Musikkbibliotek
+          Musikkbibliotek
         </div>
 
         <div className="header-buttons">
