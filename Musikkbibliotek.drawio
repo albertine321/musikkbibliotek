@@ -177,7 +177,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="TVf--EV9K_sxtpTE79eX" name="Flytdiagram">
-    <mxGraphModel dx="946" dy="644" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="526" dy="358" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -208,7 +208,7 @@
         <mxCell id="3-0Cg8Rbw_jU3WMEzmKA-8" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
             <mxPoint x="427.5" y="160" as="sourcePoint" />
-            <mxPoint x="427.5" y="240" as="targetPoint" />
+            <mxPoint x="428" y="250" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="3-0Cg8Rbw_jU3WMEzmKA-9" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
@@ -225,7 +225,7 @@
         <mxCell id="3-0Cg8Rbw_jU3WMEzmKA-10" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
             <mxPoint x="520" y="334.5" as="sourcePoint" />
-            <mxPoint x="610" y="335" as="targetPoint" />
+            <mxPoint x="620" y="335" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="3-0Cg8Rbw_jU3WMEzmKA-11" connectable="0" parent="3-0Cg8Rbw_jU3WMEzmKA-10" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="JA" vertex="1">
