@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { ScrollStackItem } from './ScrollStack';
-import { inp, lbl, F } from './formStyles';
+import { inp, F } from './formStyles';
 
 const genererSpotifyCode = (spotifyUrl) => {
   try {
@@ -22,7 +22,8 @@ export default function AlbumCard({ album, onDeleted, onUpdated }) {
     spotify_url: album.spotify_url || '',
     spotify_code_bilde: album.spotify_code_bilde || '',
   });
-  const [saveStatus, setSaveStatus] = useState(null); // 'loading' | 'error'
+  const [fileChosen, setFileChosen] = useState(false);
+  const [saveStatus, setSaveStatus] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const confirmTimer = useRef(null);
@@ -37,14 +38,25 @@ export default function AlbumCard({ album, onDeleted, onUpdated }) {
       }
       return oppdatert;
     });
+    if (name === 'bilde_url') setFileChosen(false);
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = (ev) => setForm((p) => ({ ...p, bilde_url: ev.target.result }));
+    reader.onload = (ev) => {
+      setForm((p) => ({ ...p, bilde_url: ev.target.result }));
+      setFileChosen(true);
+    };
     reader.readAsDataURL(file);
+  };
+
+  const clearImage = (e) => {
+    e.stopPropagation();
+    setForm((p) => ({ ...p, bilde_url: '' }));
+    setFileChosen(false);
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const handleSave = async () => {
@@ -58,6 +70,7 @@ export default function AlbumCard({ album, onDeleted, onUpdated }) {
       if (!res.ok) throw new Error('Lagring feilet');
       setEditing(false);
       setSaveStatus(null);
+      setFileChosen(false);
       onUpdated?.();
     } catch (err) {
       console.error(err);
@@ -74,6 +87,7 @@ export default function AlbumCard({ album, onDeleted, onUpdated }) {
       spotify_url: album.spotify_url || '',
       spotify_code_bilde: album.spotify_code_bilde || '',
     });
+    setFileChosen(false);
     setEditing(false);
     setSaveStatus(null);
   };
@@ -96,7 +110,7 @@ export default function AlbumCard({ album, onDeleted, onUpdated }) {
     }
   };
 
-  /* ── Visningsmodurs ── */
+  /* ══ VISNING ══ */
   if (!editing) {
     return (
       <ScrollStackItem>
@@ -104,7 +118,7 @@ export default function AlbumCard({ album, onDeleted, onUpdated }) {
 
           {album.bilde_url && (
             <img src={album.bilde_url} alt={album.tittel} style={{
-              width: '200px', height: '200px', borderRadius: '12px', marginTop: '10px',
+              width: '240px', height: '240px', borderRadius: '12px', marginTop: '10px',
               objectFit: 'cover', filter: 'drop-shadow(0 4px 15px rgba(0,0,0,0.3))', flexShrink: 0,
             }} />
           )}
@@ -115,7 +129,6 @@ export default function AlbumCard({ album, onDeleted, onUpdated }) {
               <p style={{ margin: '4px 0' }}>🎤 {album.artist_navn || 'Ukjent artist'}</p>
               <p style={{ margin: '4px 0' }}>📅 {album.utgivelsesaar || 'Ukjent år'}</p>
             </div>
-
             {album.spotify_code_bilde && (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', paddingBottom: '20px' }}>
                 <img src={album.spotify_code_bilde} alt="Spotify Code"
@@ -125,7 +138,6 @@ export default function AlbumCard({ album, onDeleted, onUpdated }) {
             )}
           </div>
 
-          {/* Høyre: QR + knapper */}
           <div style={{
             display: 'flex', flexDirection: 'column', alignItems: 'center',
             gap: '10px', flexShrink: 0, marginTop: '10px', marginRight: '4px', minWidth: '120px',
@@ -163,9 +175,10 @@ export default function AlbumCard({ album, onDeleted, onUpdated }) {
     );
   }
 
-  /* ── Redigeringsmodus ── */
+  /* ══ REDIGERING ══ */
   return (
     <ScrollStackItem>
+      {/* Oransje gradient – samme struktur som lilla i AddAlbumCard */}
       <div style={{
         position: 'absolute', inset: 0, borderRadius: '40px',
         background: 'linear-gradient(135deg, #fff8ee 0%, #fff3e0 100%)', zIndex: 0,
@@ -173,41 +186,73 @@ export default function AlbumCard({ album, onDeleted, onUpdated }) {
 
       <div style={{ position: 'relative', zIndex: 1, display: 'flex', gap: '16px', height: '100%' }}>
 
-        {/* VENSTRE – bilde */}
+        {/* ── VENSTRE: bilde + fil-knapp + eller + URL ── */}
         <div style={{ width: '160px', flexShrink: 0, display: 'flex', flexDirection: 'column', gap: '6px', justifyContent: 'center' }}>
-          <div
-            onClick={() => fileInputRef.current?.click()}
-            style={{
-              width: '120px', height: '120px', borderRadius: '12px', margin: '0 auto',
-              background: form.bilde_url ? 'transparent' : 'rgba(255,255,255,0.7)',
-              border: '2px dashed #f0c070', overflow: 'hidden', position: 'relative',
-              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer', flexShrink: 0,
-            }}
-          >
+
+          {/* Forhåndsvisningsboks */}
+          <div style={{
+            width: '120px', height: '120px', borderRadius: '12px',
+            background: form.bilde_url ? 'transparent' : 'rgba(255,255,255,0.7)',
+            border: '2px dashed #f0c070', overflow: 'hidden', position: 'relative',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+            flexShrink: 0, margin: '20px auto',
+          }}>
             {form.bilde_url ? (
-              <img src={form.bilde_url} alt="preview"
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                onError={() => setForm((p) => ({ ...p, bilde_url: '' }))} />
+              <>
+                <img src={form.bilde_url} alt="preview"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  onError={() => setForm((p) => ({ ...p, bilde_url: '' }))} />
+                <button onClick={clearImage} style={{
+                  position: 'absolute', top: 5, right: 5,
+                  background: 'rgba(0,0,0,0.45)', border: 'none', borderRadius: '50%',
+                  width: 22, height: 22, color: '#fff', cursor: 'pointer', fontSize: '0.7rem',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>✕</button>
+              </>
             ) : (
               <>
-                <span style={{ fontSize: '1.6rem' }}>🖼️</span>
-                <span style={{ fontSize: '0.6rem', color: '#c8a870', marginTop: '4px', textAlign: 'center' }}>Klikk for å endre</span>
+                <span style={{ fontSize: '1.6rem' }}>🎵</span>
+                <span style={{ fontSize: '0.6rem', color: '#c8a870', marginTop: '4px', textAlign: 'center' }}>Forhåndsvisning</span>
               </>
             )}
           </div>
+
+          {/* Fil-knapp */}
+          <button onClick={() => fileInputRef.current?.click()} style={{
+            ...inp, cursor: 'pointer', textAlign: 'center', fontWeight: '600',
+            color: fileChosen ? '#27ae60' : '#c07800',
+            background: fileChosen ? '#f0fff4' : 'rgba(240,192,112,0.15)',
+            border: `1.5px dashed ${fileChosen ? '#27ae60' : '#f0c070'}`,
+          }}>
+            {fileChosen ? '✅ Fil valgt' : '📁 Last opp fil'}
+          </button>
           <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} style={{ display: 'none' }} />
 
-          <F label="Bilde-URL" mb={0}>
-            <input style={inp} name="bilde_url" value={form.bilde_url}
-              onChange={handleChange} placeholder="https://…" />
-          </F>
+          {/* Eller + URL */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+            <div style={{ flex: 1, height: '1px', background: '#ddd' }} />
+            <span style={{ fontSize: '0.65rem', color: '#bbb' }}>eller</span>
+            <div style={{ flex: 1, height: '1px', background: '#ddd' }} />
+          </div>
+          <input
+            style={{ ...inp, opacity: fileChosen ? 0.45 : 1 }}
+            name="bilde_url"
+            value={fileChosen ? '' : form.bilde_url}
+            onChange={(e) => {
+              if (fileChosen) { setFileChosen(false); if (fileInputRef.current) fileInputRef.current.value = ''; }
+              handleChange(e);
+            }}
+            placeholder={fileChosen ? '(fil er valgt)' : 'Bilde-URL…'}
+            disabled={fileChosen}
+          />
         </div>
 
-        {/* MIDTRE – tekstfelter */}
+        {/* ── MIDTRE: tittel, artist, år, spotify code ── */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', minWidth: 0 }}>
+
           <div style={{ marginBottom: '10px' }}>
             <h2 style={{ margin: 0, color: '#7a4a00', fontSize: '1.15rem', fontWeight: '700' }}>✏️ Rediger album</h2>
+            <p style={{ margin: '1px 0 0', fontSize: '0.7rem', color: '#c8a060' }}>Gjør endringer og trykk Lagre</p>
           </div>
 
           <F label="Albumtittel *" mb={7}>
@@ -220,27 +265,33 @@ export default function AlbumCard({ album, onDeleted, onUpdated }) {
             <input style={inp} name="utgivelsesaar" value={form.utgivelsesaar}
               onChange={handleChange} placeholder="f.eks. 1969" type="number" />
           </F>
-          <F label="Spotify URL" mb={0}>
-            <input style={inp} name="spotify_url" value={form.spotify_url}
-              onChange={handleChange} placeholder="https://open.spotify.com/…" />
+          <F label="Spotify url" mb={0}>
+            <input style={inp} name="spotify_code_bilde" value={form.spotify_code_bilde}
+              onChange={handleChange} placeholder="https://scannables.scdn.co/…" />
           </F>
         </div>
 
-        {/* HØYRE – QR-forhåndsvisning + lagre/avbryt */}
+        {/* ── HØYRE: Spotify URL + QR + lagre/avbryt ── */}
         <div style={{
           width: '120px', flexShrink: 0,
           display: 'flex', flexDirection: 'column', alignItems: 'center',
-          justifyContent: 'center', gap: '8px', marginRight: '4px',
+          justifyContent: 'center', gap: '7px', marginRight: '4px', marginTop: '30px',
         }}>
+          <F label="Spotify qr-kode" mb={4}>
+            <input style={{ ...inp, fontSize: '0.7rem', padding: '8px 8px' }}
+              name="spotify_url" value={form.spotify_url}
+              onChange={handleChange} placeholder="https://open.spotify.com/…" />
+          </F>
+
           {form.spotify_url ? (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px' }}>
               <QRCodeSVG value={form.spotify_url} size={90} level="M"
                 style={{ filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.12))' }} />
-              <span style={{ fontSize: '0.6rem', color: '#bbb' }}>QR-forhåndsvisning</span>
+              <span style={{ fontSize: '0.6rem', color: '#bbb' }}>Forhåndsvisning</span>
             </div>
           ) : (
             <div style={{
-              width: 90, height: 90, borderRadius: '10px', flexShrink: 0,
+              width: 120, height: 120, borderRadius: '10px', flexShrink: 0,
               background: 'rgba(0,0,0,0.04)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
@@ -249,9 +300,10 @@ export default function AlbumCard({ album, onDeleted, onUpdated }) {
           )}
 
           <button onClick={handleSave} disabled={saveStatus === 'loading'} style={{
-            width: '100%', padding: '9px', borderRadius: '12px', border: 'none',
-            background: '#e67e00', color: '#fff',
-            fontWeight: '700', fontSize: '0.82rem', cursor: 'pointer',
+            width: '100%', padding: '9px', borderRadius: '12px', border: 'none', marginTop: '5px',
+            background: saveStatus === 'loading' ? '#c8a060' : '#e67e00',
+            color: '#fff', fontWeight: '700', fontSize: '0.82rem',
+            cursor: saveStatus === 'loading' ? 'not-allowed' : 'pointer',
             transition: 'all 0.2s', boxShadow: '0 3px 10px rgba(230,126,0,0.35)',
           }}>
             {saveStatus === 'loading' ? '⏳…' : '💾 Lagre'}

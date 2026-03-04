@@ -24,8 +24,8 @@
   transform-style: preserve-3d;
   background: white;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
-  height: 18rem;  /* Økt fra 12rem til 16rem */
-  width: 85%;  /* Økt fra 70% til 85% */
+  height: 20rem;  /* Økt fra 12rem til 16rem */
+  width: 95%;  /* Økt fra 70% til 85% */
   max-width: 800px;  /* Økt fra 600px */
   margin: 0 auto;
   margin-bottom: 50px;  /* Reduser fra standard til 50px */
