@@ -3,6 +3,18 @@ import { QRCodeSVG } from 'qrcode.react';
 import { ScrollStackItem } from './ScrollStack';
 import { inp, lbl, F, EMPTY_FORM } from './formStyles';
 
+const genererSpotifyCode = (spotifyUrl) => {
+  try {
+    // Trekk ut ID fra f.eks. https://open.spotify.com/album/4LH4d3cOWNNsVw41Gqt2kv
+    const deler = spotifyUrl.split('/');
+    const type = deler[deler.length - 2]; // 'album', 'track', osv.
+    const id = deler[deler.length - 1].split('?')[0]; // fjern ev. ?si=...
+    return `https://scannables.scdn.co/uri/plain/png/ffffff/black/640/spotify:${type}:${id}`;
+  } catch {
+    return '';
+  }
+};
+
 export default function AddAlbumCard({ onAlbumAdded }) {
   const [form, setForm] = useState(EMPTY_FORM);
   const [status, setStatus] = useState(null);
@@ -11,11 +23,17 @@ export default function AddAlbumCard({ onAlbumAdded }) {
   const [fileChosen, setFileChosen] = useState(false);
   const fileInputRef = useRef(null);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((p) => ({ ...p, [name]: value }));
-    if (name === 'bilde_url') { setPreviewImg(value); setFileChosen(false); }
-  };
+const handleChange = (e) => {
+  const { name, value } = e.target;
+  setForm((p) => {
+    const oppdatert = { ...p, [name]: value };
+    if (name === 'spotify_url') {
+      oppdatert.spotify_code_bilde = value ? genererSpotifyCode(value) : '';
+    }
+    return oppdatert;
+  });
+  if (name === 'bilde_url') { setPreviewImg(value); setFileChosen(false); }
+};
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -153,7 +171,7 @@ export default function AddAlbumCard({ onAlbumAdded }) {
               onChange={handleChange} placeholder="f.eks. 1969" type="number" />
           </F>
 
-          <F label="Spotify kode bilde (URL)" mb={0}>
+          <F label="Spotify kode (valgfritt)" mb={0}>
             <input style={inp} name="spotify_code_bilde" value={form.spotify_code_bilde}
               onChange={handleChange} placeholder="https://scannables.scdn.co/…" />
           </F>
@@ -163,7 +181,7 @@ export default function AddAlbumCard({ onAlbumAdded }) {
         <div style={{
           width: '120px', flexShrink: 0,
           display: 'flex', flexDirection: 'column', alignItems: 'center',
-          justifyContent: 'center', gap: '7px', marginRight: '4px', 
+          justifyContent: 'center', gap: '7px', marginRight: '4px', marginTop: '30px', 
         }}>
           <F label="Spotify URL" mb={4}>
             <input style={{ ...inp, fontSize: '0.7rem', padding: '8px 8px', }}
@@ -190,7 +208,7 @@ export default function AddAlbumCard({ onAlbumAdded }) {
           )}
 
           <button onClick={handleSubmit} disabled={isLoading} style={{
-            width: '100%', padding: '9px', borderRadius: '12px', border: 'none', marginTop: '30px',
+            width: '100%', padding: '9px', borderRadius: '12px', border: 'none', marginTop: '5px',
             background: ok ? '#27ae60' : isLoading ? '#7c6bbf' : '#110954',
             color: '#fff', fontWeight: '700', fontSize: '0.82rem',
             cursor: isLoading ? 'not-allowed' : 'pointer',

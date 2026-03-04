@@ -69,6 +69,30 @@ export async function add_Album({ tittel, artist_navn, utgivelsesaar, bilde_url,
     }
 }
 
+export async function update_Album(album_id, { tittel, artist_navn, utgivelsesaar, bilde_url, spotify_url, spotify_code_bilde }) {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+
+    let artistRows = await conn.query(`SELECT artist_id FROM artist WHERE navn = ?`, [artist_navn]);
+    let artist_id;
+    if (artistRows.length > 0) {
+      artist_id = artistRows[0].artist_id;
+    } else {
+      const r = await conn.query(`INSERT INTO artist (navn) VALUES (?)`, [artist_navn]);
+      artist_id = Number(r.insertId);
+    }
+
+    await conn.query(
+      `UPDATE album SET tittel=?, artist_id=?, utgivelsesaar=?, bilde_url=?, spotify_url=?, spotify_code_bilde=? WHERE album_id=?`,
+      [tittel, artist_id, utgivelsesaar || null, bilde_url || null, spotify_url || null, spotify_code_bilde || null, album_id]
+    );
+    return { success: true };
+  } finally {
+    if (conn) conn.release();
+  }
+}
+
 export async function delete_Album(album_id) {
     let conn;
     try {

@@ -1,4 +1,4 @@
-import { get_Album, add_Album, delete_Album } from './dbconnector.js';
+import { get_Album, add_Album, delete_Album, update_Album } from './dbconnector.js';
 import express from 'express';
 
 const app = express();
@@ -50,4 +50,15 @@ app.delete('/musikk/:id', async (req, res) => {
 
 app.listen(port, () => {
     console.log(`Server kjører på port ${port}`);
+});
+
+
+app.patch('/musikk/:id', async (req, res) => {
+  const id = parseInt(req.params.id);
+  try {
+    await update_Album(id, req.body);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });

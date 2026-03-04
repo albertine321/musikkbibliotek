@@ -36,7 +36,7 @@ export default function Page() {
       <ScrollStack useWindowScroll={false}>
         <AddAlbumCard onAlbumAdded={fetchAlbums} />
         {albums.map((album) => (
-          <AlbumCard key={album.album_id} album={album} onDeleted={fetchAlbums} />
+          <AlbumCard key={album.album_id} album={album} onDeleted={fetchAlbums} onUpdated={fetchAlbums} />
         ))}
       </ScrollStack>
     </div>
