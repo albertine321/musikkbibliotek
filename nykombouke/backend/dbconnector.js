@@ -38,6 +38,17 @@ export async function add_Album({ tittel, artist_navn, utgivelsesaar, bilde_url,
     try {
         conn = await pool.getConnection();
 
+        // Sjekk om albumet allerede finnes basert på spotify_url
+        if (spotify_url) {
+            const existing = await conn.query(
+                `SELECT tittel FROM album WHERE spotify_url = ?`,
+                [spotify_url]
+            );
+            if (existing.length > 0) {
+                throw new Error(`Dette albumet finnes allerede: "${existing[0].tittel}"`);
+            }
+        }
+
         // Sjekk om artisten finnes, ellers opprett den
         let artistRows = await conn.query(
             `SELECT artist_id FROM artist WHERE navn = ?`,
@@ -68,6 +79,7 @@ export async function add_Album({ tittel, artist_navn, utgivelsesaar, bilde_url,
         if (conn) conn.release();
     }
 }
+
 
 export async function update_Album(album_id, { tittel, artist_navn, utgivelsesaar, bilde_url, spotify_url, spotify_code_bilde }) {
   let conn;
