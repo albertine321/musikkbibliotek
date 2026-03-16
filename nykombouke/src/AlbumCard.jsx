@@ -1,7 +1,8 @@
 import { useState, useRef } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { ScrollStackItem } from './ScrollStack';
-import { inp, F } from './formStyles';
+import { inp, F } from './formStyles.js';
+import './App.css';
 
 const genererSpotifyCode = (spotifyUrl) => {
   try {
@@ -117,7 +118,7 @@ export default function AlbumCard({ album, onDeleted, onUpdated }) {
         <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
 
           {album.bilde_url && (
-            <img src={album.bilde_url} alt={album.tittel} style={{
+            <img src={album.bilde_url} alt={`Coveret til ${album.tittel}`} style={{
               width: '240px', height: '240px', borderRadius: '12px', marginTop: '10px',
               objectFit: 'cover', filter: 'drop-shadow(0 4px 15px rgba(0,0,0,0.3))', flexShrink: 0,
             }} />
@@ -125,13 +126,13 @@ export default function AlbumCard({ album, onDeleted, onUpdated }) {
 
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '15px' }}>
             <div>
-              <h2 style={{ marginBottom: '5px' }}>{album.tittel || 'Ukjent album'}</h2>
-              <p style={{ margin: '4px 0' }}>🎤 {album.artist_navn || 'Ukjent artist'}</p>
-              <p style={{ margin: '4px 0' }}>📅 {album.utgivelsesaar || 'Ukjent år'}</p>
+              <h2 style={{ marginBottom: '5px', color: 'black' }}>{album.tittel || 'Ukjent album'}</h2>
+              <p style={{ margin: '4px 0', color: 'black' }}>🎤 {album.artist_navn || 'Ukjent artist'}</p>
+              <p style={{ margin: '4px 0', color: 'black' }}>📅 {album.utgivelsesaar || 'Ukjent år'}</p>
             </div>
             {album.spotify_code_bilde && (
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', paddingBottom: '20px' }}>
-                <img src={album.spotify_code_bilde} alt="Spotify Code"
+                <img src={album.spotify_code_bilde} alt={`Spotify-koden til ${album.tittel}`}
                   style={{ width: '200px', height: 'auto', filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))' }} />
                 <p style={{ fontSize: '0.8rem', margin: 0, color: '#666', fontWeight: '500' }}>Skann i Spotify</p>
               </div>
@@ -162,7 +163,7 @@ export default function AlbumCard({ album, onDeleted, onUpdated }) {
             <button onClick={handleDelete} disabled={deleting} style={{
               padding: '8px 0', borderRadius: '12px', border: 'none',
               background: confirmDelete ? '#e74c3c' : '#f0f0f0',
-              color: confirmDelete ? '#fff' : '#aaa',
+              color: confirmDelete ? '#fff' : '#555',
               fontWeight: '600', fontSize: '0.8rem', cursor: 'pointer',
               transition: 'all 0.2s', width: '120px',
               boxShadow: confirmDelete ? '0 3px 10px rgba(231,76,60,0.35)' : 'none',
@@ -230,9 +231,9 @@ export default function AlbumCard({ album, onDeleted, onUpdated }) {
 
           {/* Eller + URL */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-            <div style={{ flex: 1, height: '1px', background: '#ddd' }} />
-            <span style={{ fontSize: '0.65rem', color: '#bbb' }}>eller</span>
-            <div style={{ flex: 1, height: '1px', background: '#ddd' }} />
+            <div style={{ flex: 1, height: '1px', background: '#794a01' }} />
+            <span style={{ fontSize: '0.7rem', color: '#794a01' }}>eller</span>
+            <div style={{ flex: 1, height: '1px', background: '#794a01' }} />
           </div>
           <input
             style={{ ...inp, opacity: fileChosen ? 0.45 : 1 }}
@@ -256,7 +257,8 @@ export default function AlbumCard({ album, onDeleted, onUpdated }) {
           </div>
 
           <F label="Albumtittel *" mb={7}>
-            <input style={inp} name="tittel" value={form.tittel} onChange={handleChange} placeholder="f.eks. Abbey Road" />
+            <input style= {{width: '100%', paddingLeft: '6px', paddingTop: '10px', borderRadius: '8px', border: '1.5px solid #e0e0e0', fontSize: '0.82rem', color: '#000000', background: '#fff', outline: 'none', boxSizing: 'border-box', fontFamily: 'inherit'}}
+             name="tittel" value={form.tittel} onChange={handleChange} placeholder="f.eks. Abbey Road" />
           </F>
           <F label="🎤 Artist *" mb={7}>
             <input style={inp} name="artist_navn" value={form.artist_navn} onChange={handleChange} placeholder="f.eks. The Beatles" />

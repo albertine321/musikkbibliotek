@@ -4,16 +4,17 @@ export const inp = {
   borderRadius: '8px',
   border: '1.5px solid #e0e0e0',
   fontSize: '0.82rem',
-  color: '#2c3e50',
+  color: '#4c4c4cff',
   background: '#fff',
   outline: 'none',
   boxSizing: 'border-box',
   fontFamily: 'inherit',
 };
+
 export const lbl = {
   fontSize: '0.6rem',
   fontWeight: '700',
-  color: '#c0c0c0',
+  color: '#110955',
   textTransform: 'uppercase',
   letterSpacing: '0.07em',
   marginBottom: '3px',

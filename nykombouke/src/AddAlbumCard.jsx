@@ -1,7 +1,8 @@
 import { useState, useRef } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { ScrollStackItem } from './ScrollStack';
-import { inp, lbl, F, EMPTY_FORM } from './formStyles';
+import { inp /*lbl*/, F, EMPTY_FORM } from './formStyles.js';
+import './App.css';
 
 const genererSpotifyCode = (spotifyUrl) => {
   try {
@@ -114,7 +115,8 @@ const handleChange = (e) => {
             ) : (
               <>
                 <span style={{ fontSize: '1.6rem' }}>🎵</span>
-                <span style={{ fontSize: '0.6rem', color: '#c0b8d8', marginTop: '4px', textAlign: 'center' }}>Forhåndsvisning</span>
+                <span style={{ fontSize: '0.8rem', color: '#c0b8d8', marginTop: '4px', textAlign: 'center' }}>Forhåndsvisning</span>
+
               </>
             )}
           </div>
@@ -128,25 +130,23 @@ const handleChange = (e) => {
           }}>
             {fileChosen ? '✅ Fil valgt' : '📁 Last opp fil'}
           </button>
-          <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} style={{ display: 'none' }} />
+          
+          <label for="last_opp_bilde" style={{ fontSize: '0rem', color: '#bbb', marginTop: '2px' }}>
+            Last opp bilde
+            <input id="last_opp_bilde" ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} style={{ display: 'none' }} />
+          </label>
 
           {/* Eller + URL */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-            <div style={{ flex: 1, height: '1px', background: '#ddd' }} />
-            <span style={{ fontSize: '0.65rem', color: '#bbb' }}>eller</span>
-            <div style={{ flex: 1, height: '1px', background: '#ddd' }} />
+            <div style={{ flex: 1, height: '1px', background: '#1a1060' }} />
+            <span style={{ fontSize: '0.7rem', color: '#1a1060' }}>eller</span>
+            <div style={{ flex: 1, height: '1px', background: '#1a1060' }} />
           </div>
-          <input
-            style={{ ...inp, opacity: fileChosen ? 0.45 : 1 }}
-            name="bilde_url"
-            value={fileChosen ? '' : form.bilde_url}
-            onChange={(e) => {
-              if (fileChosen) { setFileChosen(false); if (fileInputRef.current) fileInputRef.current.value = ''; }
-              handleChange(e);
-            }}
-            placeholder={fileChosen ? '(fil er valgt)' : 'Bilde-URL…'}
-            disabled={fileChosen}
-          />
+          
+          <label for="bilde_url" style={{ fontSize: '0rem', fontWeight: '700', color: '#110955', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: '3px', display: 'block', }}>
+            Bilde-URL
+            <input style={{ ...inp, opacity: fileChosen ? 0.45 : 1 }} name="bilde_url" id="bilde_url" value={fileChosen ? '' : form.bilde_url} onChange={(e) => {if (fileChosen) { setFileChosen(false); if (fileInputRef.current) fileInputRef.current.value = ''; } handleChange(e); }} placeholder={fileChosen ? '(fil er valgt)' : 'Bilde-URL…'} disabled={fileChosen}/>
+          </label>
         </div>
 
         {/* ── MIDTRE: tekstfelt ── */}
@@ -155,26 +155,31 @@ const handleChange = (e) => {
           {/* Overskrift */}
           <div style={{ marginBottom: '10px' }}>
             <h2 style={{ margin: 0, color: '#1a1060', fontSize: '1.15rem', fontWeight: '700' }}>Legg til album</h2>
-            <p style={{ margin: '1px 0 0', fontSize: '0.7rem', color: '#a8a8c8' }}>Fyll inn og trykk Lagre</p>
+            <p style={{ margin: '1px 0 0', fontSize: '0.7rem', color: '#1a1060' }}>Fyll inn og trykk Lagre</p>
           </div>
+            
 
-          <F label="Albumtittel *" mb={7}>
-            <input style={inp} name="tittel" value={form.tittel} onChange={handleChange} placeholder="f.eks. Abbey Road" />
-          </F>
+            <label for="tittel" style={{ fontSize: '0.6rem', fontWeight: '700', color: '#110955', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: '3px', display: 'block', }}>
+              Albumtittel
+              <input style={inp} name="tittel" id="tittel" value={form.tittel} onChange={handleChange} placeholder="f.eks. Abbey Road" />
+            </label>
 
-          <F label="🎤 Artist *" mb={7}>
-            <input style={inp} name="artist_navn" value={form.artist_navn} onChange={handleChange} placeholder="f.eks. The Beatles" />
-          </F>
+            <label for="artist_navn" style={{ fontSize: '0.6rem', fontWeight: '700', color: '#110955', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: '3px', display: 'block', }}>
+              🎤 Artist
+              <input style={inp} name="artist_navn" id="artist_navn" value={form.artist_navn} onChange={handleChange} placeholder="f.eks. The Beatles" />
+            </label>
 
-          <F label="📅 Utgivelsesår" mb={7}>
-            <input style={inp} name="utgivelsesaar" value={form.utgivelsesaar}
-              onChange={handleChange} placeholder="f.eks. 1969" type="number" />
-          </F>
+            <label for="utgivelsesaar" style={{ fontSize: '0.6rem', fontWeight: '700', color: '#110955', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: '3px', display: 'block', }}>
+              📅 Utgivelsesår
+              <input style={inp} name="utgivelsesaar" id="utgivelsesaar" value={form.utgivelsesaar} onChange={handleChange} placeholder="f.eks. 1969" type="number" />
+            </label>
 
-          <F label="Spotify kode (valgfritt)" mb={0}>
-            <input style={inp} name="spotify_code_bilde" value={form.spotify_code_bilde}
-              onChange={handleChange} placeholder="https://scannables.scdn.co/…" />
-          </F>
+
+            <label for="spotify_code_bilde" style={{ fontSize: '0.6rem', fontWeight: '700', color: '#110955', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: '3px', display: 'block', }}>
+              Spotify kode (valgfritt)
+              <input style={inp} name="spotify_code_bilde" id="spotify_code_bilde" value={form.spotify_code_bilde} onChange={handleChange} placeholder="https://scannables.scdn.co/…" />
+            </label>
+
         </div>
 
         {/* ── HØYRE: Spotify URL + QR + Lagre ── */}
@@ -183,18 +188,19 @@ const handleChange = (e) => {
           display: 'flex', flexDirection: 'column', alignItems: 'center',
           justifyContent: 'center', gap: '7px', marginRight: '4px', marginTop: '30px', 
         }}>
-          <F label="Spotify URL" mb={4}>
-            <input style={{ ...inp, fontSize: '0.7rem', padding: '8px 8px', }}
-              name="spotify_url" value={form.spotify_url}
-              onChange={handleChange} placeholder="https://open.spotify.com/…" />
-          </F>
+
+          <label for='spotify_url' style={{ fontSize: '0.6rem', fontWeight: '700', color: '#110955', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: '3px', display: 'block', }} >
+            Spotify URL
+            <input style={{ ...inp, fontSize: '0.7rem', padding: '8px 8px', }} name="spotify_url" id="spotify_url" value={form.spotify_url} onChange={handleChange} placeholder="https://open.spotify.com/…" />
+          </label>
+
 
           {/* QR – bare vis hvis URL finnes, ellers placeholder */}
           {form.spotify_url ? (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px' }}>
               <QRCodeSVG value={form.spotify_url} size={90} level="M"
                 style={{ filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.12))' }} />
-              <span style={{ fontSize: '0.6rem', color: '#bbb' }}>Forhåndsvisning</span>
+              <p style={{ fontSize: '0.8rem', color: '#110954' }}>Forhåndsvisning</p>
             </div>
           ) : (
             <div style={{

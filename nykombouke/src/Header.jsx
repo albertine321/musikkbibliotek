@@ -5,9 +5,9 @@ export default function Header() {
     <header className="header">
       <nav className="header-nav">
         
-        <div className="header-logo">
+        <h1 className="header-logo">
           Musikkbibliotek
-        </div>
+        </h1>
 
         <div className="header-buttons">
           <button>Hjem</button>

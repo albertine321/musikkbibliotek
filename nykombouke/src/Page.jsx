@@ -30,7 +30,10 @@ export default function Page() {
 
   if (loading) return <div className="loading">⏳ Laster...</div>;
   if (error) return <div className="error">❌ Feil: {error}</div>;
-
+  var elem = document.querySelector('noscript');
+  if (elem) {
+      elem.parentNode.removeChild(elem);
+  }
   return (
     <div className="musikk-container">
       <ScrollStack useWindowScroll={false}>
@@ -41,4 +44,5 @@ export default function Page() {
       </ScrollStack>
     </div>
   );
+
 }
