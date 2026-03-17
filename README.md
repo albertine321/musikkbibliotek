@@ -167,4 +167,4 @@ Legg gjerne til en `LICENSE` (f.eks. MIT) og en `CONTRIBUTING.md` hvis du vil ha
 
 ***
 
-Skrevet med hjelp av Claude Sonnet 4.5 i mars 2026.
+Skrevet med hjelp av Claude Sonnet 4.6 i mars 2026.
