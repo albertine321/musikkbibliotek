@@ -1,6 +1,5 @@
-import { useEffect, useState, useRef } from 'react';
-import ScrollStack, { ScrollStackItem } from './ScrollStack';
-import { QRCodeSVG } from 'qrcode.react';
+import { useEffect, useState } from 'react';
+import ScrollStack from './ScrollStack';
 import './ScrollStack.css';
 import AddAlbumCard from './AddAlbumCard';
 import AlbumCard from './AlbumCard';
