@@ -1,3 +1,5 @@
+import Footer from './Footer';
+
 export default function Personvern() {
   return (
     <div style={{
@@ -97,18 +99,7 @@ export default function Personvern() {
         ))}
 
       </div>
-
-      {/* Footer-linje */}
-      <div style={{
-        background: 'linear-gradient(135deg, #1a1060 0%, #2d1b8e 100%)',
-        padding: '20px 40px',
-        textAlign: 'center',
-        fontSize: '0.78rem',
-        color: 'rgba(255,255,255,0.5)',
-        fontFamily: 'system-ui, sans-serif',
-      }}>
-        🎵 Musikkbibliotek · Personvernserklæring
-      </div>
+        <Footer />
     </div>
   );
 }
